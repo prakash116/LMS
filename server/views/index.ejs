@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Page Not Found</title>
+  </head>
+  <style>
+    .error {
+      text-align: center;
+      margin-top: 20vh;
+    }
+    body {
+      margin: 0;
+      height: 100vh;
+      overflow: hidden;
+      animation: backgroundChange 10s infinite alternate;
+    }
+
+    /* Background color animation */
+    @keyframes backgroundChange {
+      0% {
+        background-color: #ff9a9e;
+      }
+      25% {
+        background-color: #fad0c4;
+      }
+      50% {
+        background-color: #fbc2eb;
+      }
+      75% {
+        background-color: #a1c4fd;
+      }
+      100% {
+        background-color: #c2e9fb;
+      }
+    }
+
+    /* Container for bubbles */
+    .bubble-container {
+      position: relative;
+      width: 100%;
+      height: 100vh;
+      overflow: hidden;
+    }
+
+    /* Style for bubbles */
+    .bubble {
+      position: absolute;
+      border-radius: 50%;
+      background: radial-gradient(
+        circle,
+        rgba(255, 255, 255, 0.5),
+        rgba(255, 255, 255, 0)
+      );
+      animation: floatBubble 8s infinite;
+      pointer-events: none;
+    }
+
+    /* Bubble floating animation */
+    @keyframes floatBubble {
+      0% {
+        transform: translateY(100%);
+      }
+      100% {
+        transform: translateY(-50%);
+      }
+    }
+  </style>
+  <body>
+    <div class="bubble-container">
+      <div class="error">
+        <h2><i>error 404</i></h2>
+        <h1>Page Not Found</h1>
+        <p>
+          The page you are looking for might have been removed, had its name
+          changed, or is temporarily unavailable.
+        </p>
+        <a href="/">Go to Homepage</a>
+      </div>
+    </div>
+  </body>
+  <script>
+    const bubbleContainer = document.querySelector(".bubble-container");
+
+    // Function to create a bubble
+    function createBubble() {
+      const bubble = document.createElement("div");
+      bubble.classList.add("bubble");
+
+      // Random size and position
+      const size = Math.random() * 500 + 20; // 20px to 70px
+      bubble.style.width = `${size}px`;
+      bubble.style.height = `${size}px`;
+      bubble.style.left = `${Math.random() * 100}%`;
+
+      // Random color
+      const hue = Math.random() * 360;
+      bubble.style.background = `radial-gradient(circle, hsla(${hue}, 100%, 75%, 0.7), transparent)`;
+
+      bubbleContainer.appendChild(bubble);
+
+      // Remove bubble after animation
+      setTimeout(() => {
+        bubble.remove();
+      }, 8000);
+    }
+
+    // Create bubbles continuously
+    setInterval(createBubble, 500);
+
+    // Expand bubbles near the cursor
+    bubbleContainer.addEventListener("mousemove", (e) => {
+      const bubbles = document.querySelectorAll(".bubble");
+      bubbles.forEach((bubble) => {
+        const rect = bubble.getBoundingClientRect();
+        const bubbleCenterX = rect.left + rect.width / 2;
+        const bubbleCenterY = rect.top + rect.height / 2;
+
+        const distance = Math.hypot(
+          e.clientX - bubbleCenterX,
+          e.clientY - bubbleCenterY
+        );
+        if (distance < 100) {
+          bubble.style.transform = `scale(1.5)`;
+        } else {
+          bubble.style.transform = `scale(1)`;
+        }
+      });
+    });
+  </script>
+</html>
